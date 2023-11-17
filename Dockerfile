@@ -1,16 +1,13 @@
-FROM node:lts-alpine
+FROM node:12-slim
 
-RUN apk add --no-cache tini
+WORKDIR /use/src/app
 
-ENV NODE_ENV production
-USER node
+COPY package*.json ./
 
-WORKDIR /app
+RUN npm install --only=production
 
-COPY --chown=node:node . ./
-
-RUN yarn --network-timeout=100000
+COPY . ./
 
 EXPOSE 3000
 
-CMD [ "/sbin/tini", "--", "node", "app.js" ]
+CMD [ "node", "app.js" ]
